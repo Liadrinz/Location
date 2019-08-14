@@ -52,9 +52,9 @@ with tf.Session() as sess:
     idx = 1
     # prev_test_a = 0
     while True:
-        if time() >= 1565712754 + 17 * 3600:
-            print('Done!')
-            exit(0)
+        # if time() >= 1565712754 + 17 * 3600:
+        #     print('Done!')
+        #     exit(0)
         xs, ys, fs = loader.next_batch(settings.batch_size)
         if idx % 10 == 0:
             # train
