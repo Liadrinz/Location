@@ -5,22 +5,22 @@ import math
 
 def get_lstm_unit(sequences, n_frames, training, name=''):
 
-    sqrt_shape = int(math.sqrt(settings.n_hidden))
-    offset = tf.expand_dims(sequences, [3])  # (batch, time, n_input, 1)
-    offset = tf.layers.conv2d(offset, sqrt_shape, [1, settings.n_inputs], padding='VALID', kernel_regularizer=tf.contrib.layers.l2_regularizer(settings.rr), activation=tf.nn.relu)  # (batch, time, 1, n_hidden)
-    offset = tf.layers.max_pooling2d(offset, [settings.n_frames, 1], [1, 1])  # (batch, 1, 1, n_hidden)
-    offset = tf.reshape(offset, [-1, sqrt_shape])
+    # sqrt_shape = int(math.sqrt(settings.n_hidden))
+    # offset = tf.expand_dims(sequences, [3])  # (batch, time, n_input, 1)
+    # offset = tf.layers.conv2d(offset, sqrt_shape, [1, settings.n_inputs], padding='VALID', kernel_regularizer=tf.contrib.layers.l2_regularizer(settings.rr), activation=tf.nn.relu)  # (batch, time, 1, n_hidden)
+    # offset = tf.layers.max_pooling2d(offset, [settings.n_frames, 1], [1, 1])  # (batch, 1, 1, n_hidden)
+    # offset = tf.reshape(offset, [-1, sqrt_shape])
     
-    offset = tf.reshape(offset, [-1, sqrt_shape, sqrt_shape, 1])  # (batch, 16, 16, 1)
-    offset = tf.layers.conv2d(offset, sqrt_shape, [16, 16], kernel_regularizer=tf.contrib.layers.l2_regularizer(settings.rr), activation=tf.nn.relu)  # (batch, 1, 1, 16)
-    offset = tf.reduce_mean(tf.squeeze(offset, [1, 2]), axis=-1) * settings.clipping
+    # offset = tf.reshape(offset, [-1, sqrt_shape, sqrt_shape, 1])  # (batch, 16, 16, 1)
+    # offset = tf.layers.conv2d(offset, sqrt_shape, [16, 16], kernel_regularizer=tf.contrib.layers.l2_regularizer(settings.rr), activation=tf.nn.relu)  # (batch, 1, 1, 16)
+    # offset = tf.reduce_mean(tf.squeeze(offset, [1, 2]), axis=-1) * settings.clipping
 
-    slist = []
-    for i in range(settings.batch_size):
-        begin = tf.cast(offset[i], tf.int32)
-        seq = tf.expand_dims(sequences[i][begin : begin+settings.clipping], axis=0)
-        slist.append(seq)
-    sequences = tf.concat(slist, axis=0)
+    # slist = []
+    # for i in range(settings.batch_size):
+    #     begin = tf.cast(offset[i], tf.int32)
+    #     seq = tf.expand_dims(sequences[i][begin : begin+settings.clipping], axis=0)
+    #     slist.append(seq)
+    # sequences = tf.concat(slist, axis=0)
 
     cell = tf.nn.rnn_cell.LSTMCell(num_units=settings.n_hidden, name=name)
     lstm_cell = tf.nn.rnn_cell.DropoutWrapper(cell, output_keep_prob=settings.kp1)
